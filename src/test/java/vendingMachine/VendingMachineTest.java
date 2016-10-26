@@ -1,22 +1,21 @@
 package vendingMachine;
 
 import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class VendingMachineTest {
+	private VendingMachine vend;
 
 	@Before
 	public void setUp() throws Exception {
+		this.vend = new VendingMachine();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-		
+	}		
 				
 //	Accept Coins
 //
@@ -33,33 +32,70 @@ public class VendingMachineTest {
 //	using strings, constants, enums, symbols, or something of that nature.
 
 	@Test
-	public void VendingMachineAcceptsValidCoins() {
-		fail("Not yet implemented");
+	public void VendingMachineAcceptsNickels() {		
+		Coin nickel = new Coin(CoinConstants.NICKELWEIGHT, CoinConstants.NICKELEDGE);
+		assertTrue(vend.insertCoin(nickel));
 	}
 	
 	@Test
-	public void VendingMachineRejectsInValidCoins() {
-		fail("Not yet implemented");
+	public void VendingMachineAcceptsDimes() {
+		Coin dime = new Coin(CoinConstants.DIMEWEIGHT, CoinConstants.DIMEEDGE);
+		assertTrue(vend.insertCoin(dime));
+	}
+	
+	@Test
+	public void VendingMachineAcceptsQuarters() {		
+		Coin quarter = new Coin(CoinConstants.QUARTERWEIGHT, CoinConstants.QUARTEREDGE);
+		assertTrue(vend.insertCoin(quarter));
+	}
+	
+	@Test
+	public void VendingMachineRejectsPennies() {
+		Coin cent = new Coin(CoinConstants.CENTWEIGHT, CoinConstants.CENTEDGE);
+		assertFalse(vend.insertCoin(cent));
 	}
 	
 	@Test
 	public void VendingMachineAddsCoinValueToCurrentAmount() {
-		fail("Not yet implemented");
+		Coin nickel = new Coin(CoinConstants.NICKELWEIGHT, CoinConstants.NICKELEDGE);
+		Coin dime = new Coin(CoinConstants.DIMEWEIGHT, CoinConstants.DIMEEDGE);
+		Coin quarter = new Coin(CoinConstants.QUARTERWEIGHT, CoinConstants.QUARTEREDGE);		
+		Coin cent = new Coin(CoinConstants.CENTWEIGHT, CoinConstants.CENTEDGE);
+		vend.insertCoin(nickel);
+		assertTrue(vend.getCurrentBalance() == .05);
+		vend.insertCoin(dime);
+		assertTrue(vend.getCurrentBalance() == .15);
+		vend.insertCoin(quarter);
+		assertTrue(vend.getCurrentBalance() == .4);
+		vend.insertCoin(cent);
+		assertTrue(vend.getCurrentBalance() == .4);
 	}
 	
 	@Test
 	public void VendingMachineUpdatesDisplayWhenCoinsAreAdded() {
-		fail("Not yet implemented");
+		Coin nickel = new Coin(CoinConstants.NICKELWEIGHT, CoinConstants.NICKELEDGE);
+		Coin dime = new Coin(CoinConstants.DIMEWEIGHT, CoinConstants.DIMEEDGE);
+		Coin quarter = new Coin(CoinConstants.QUARTERWEIGHT, CoinConstants.QUARTEREDGE);		
+		Coin cent = new Coin(CoinConstants.CENTWEIGHT, CoinConstants.CENTEDGE);
+		vend.insertCoin(nickel);
+		assertEquals(vend.getDisplay(), "0.05", vend.getDisplay());
+		vend.insertCoin(dime);
+		assertEquals(vend.getDisplay(), "0.15", vend.getDisplay());
+		vend.insertCoin(quarter);
+		assertEquals(vend.getDisplay(), "0.40", vend.getDisplay());
+		vend.insertCoin(cent);
+		assertEquals(vend.getDisplay(), "0.40", vend.getDisplay());
 	}
 	
 	@Test
 	public void VendingMachineDisplaysINSERTCOINWhenNoCoinsAreInserted() {
-		fail("Not yet implemented");
+		assertEquals(vend.getDisplay(), "INSERT COIN", vend.getDisplay());
 	}
 	
 	@Test
 	public void VendingMachinePlacesRejectedCoinsInCoinReturn() {
-		fail("Not yet implemented");
+		Coin cent = new Coin(CoinConstants.CENTWEIGHT, CoinConstants.CENTEDGE);
+		assertEquals(.01, vend.returnInvalidCoin(cent), .001);
 	}
 //
 //			Select Product
