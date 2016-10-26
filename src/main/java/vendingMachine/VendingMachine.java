@@ -7,11 +7,14 @@ import java.util.List;
 import vendingMachine.VendingMachineConstants.*;
 
 public class VendingMachine {
-
+	// TODO: Add method to addProduct that will increment quantity if already in list (refactoring)
+	// TODO: Add a method to showDisplay to change values (ex. from SOLD OUT to INSERT COIN)
+	
 	private double currentBalance;
 	private double coinReturnBalance;
 	private String display;
 	public List<Product> products = new ArrayList<Product>();
+
 	
 	// Default constructor
 	VendingMachine() {
@@ -58,9 +61,11 @@ public class VendingMachine {
 		this.display = VendingMachineConstants.DISPLAY_DEFAULT;		
 	}
 	
-	/**
-	 * Getters and setters
-	 */
+	// Simulating emptying of coin return for this exercise
+	public void emptyCoinReturn() {
+		this.coinReturnBalance = 0.0;
+	}
+	
 	public String getDisplay() {
 		return display;
 	}
