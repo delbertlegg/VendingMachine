@@ -79,7 +79,7 @@ public class VendingMachineSelectsProductTest {
 		vend.insertCoin(nickel);
 		vend.pushButton(Button.CANDY);
 		assertEquals(VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
-		assertEquals(0.0, vend.getCurrentBalance(), .001);
+		assertEquals(0.0, vend.getCurrentBalance(), .01);
 	}
 	
 	@Test

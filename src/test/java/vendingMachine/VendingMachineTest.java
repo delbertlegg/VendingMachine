@@ -24,21 +24,7 @@ public class VendingMachineTest {
 	}
 	
 //
-//	Make Change
-//
-//	As a vendor
-//	I want customers to receive correct change
-//	So that they will use the vending machine again
-//
-//	When a product is selected that costs less than the amount of money in the machine, then the remaining amount is placed in the coin return.
-//
-//	Return Coins
-//
-//	As a customer
-//	I want to have my money returned
-//	So that I can change my mind about buying stuff from the vending machine
-//
-//	When the return coins button is pressed, the money the customer has placed in the machine is returned and the display shows INSERT COIN.
+
 //
 //	Sold Out
 //
