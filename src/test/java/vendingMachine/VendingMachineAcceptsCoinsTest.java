@@ -95,7 +95,7 @@ public class VendingMachineAcceptsCoinsTest {
 	
 	@Test
 	public void VendingMachinePlacesRejectedCoinsInCoinReturn() {
-		assertEquals(.01, vend.returnInvalidCoin(cent), .001);
+		assertEquals(.01, vend.returnInvalidCoin(cent), .01);
 	}
 
 }

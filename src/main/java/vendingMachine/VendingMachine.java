@@ -42,6 +42,7 @@ public class VendingMachine {
 			if (button.Value() == product.getName()) {
 				if (this.currentBalance >= product.getPrice()) {
 					this.setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
+					this.setCoinReturnBalance(this.currentBalance - product.getPrice());
 					this.setCurrentBalance(0.0);
 					return product;
 				}
@@ -49,6 +50,12 @@ public class VendingMachine {
 			}
 		}
 		return null;
+	}
+	
+	public void pushReturnButton() {
+		this.coinReturnBalance = this.currentBalance;
+		this.currentBalance = 0.0;
+		this.display = VendingMachineConstants.DISPLAY_DEFAULT;		
 	}
 	
 	/**
@@ -69,5 +76,15 @@ public class VendingMachine {
 	public void setCurrentBalance(double currentBalance) {
 		this.currentBalance = currentBalance;
 	}
+	
+	public double getCoinReturnBalance() {
+		return coinReturnBalance;
+	}
+
+	public void setCoinReturnBalance(double coinReturnBalance) {
+		this.coinReturnBalance = coinReturnBalance;
+	}
+
+	
 
 }
