@@ -64,5 +64,12 @@ public class CoinConstants {
 	public static final CoinEdge EDGE_NICKEL = CoinEdge.SMOOTH;
 	public static final CoinEdge EDGE_DIME = CoinEdge.RIDGED;
 	public static final CoinEdge EDGE_QUARTER = CoinEdge.RIDGED;
+	
+	// Coin Values
+	public static final double VALUE_CENT = .01;
+	public static final double VALUE_NICKEL = .05;
+	public static final double VALUE_DIME = .1;
+	public static final double VALUE_QUARTER = .25;
+	
 
 }

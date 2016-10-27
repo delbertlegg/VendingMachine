@@ -3,67 +3,112 @@ package vendingMachine;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import vendingMachine.VendingMachineConstants.*;
 
-public class VendingMachine {
-	// TODO: Add method to addProduct that will increment quantity if already in list (refactoring)
-	// TODO: Add a method to showDisplay to change values (ex. from SOLD OUT to INSERT COIN)
-	
+public class VendingMachine {	
 	private double currentBalance;
 	private double coinReturnBalance;
 	private String display;
 	public List<Product> products = new ArrayList<Product>();
+	private Map<Coin, Integer> change = new HashMap<Coin, Integer>();
+	private List<Coin> currentCoins = new ArrayList<Coin>();
 
 	
 	// Default constructor
 	VendingMachine() {
 		currentBalance = 0.0;
-		coinReturnBalance = 0.0;		
-		setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
+		coinReturnBalance = 0.0;
+		setDisplay(exactChangeIsNeeded() ? VendingMachineConstants.DISPLAY_EXACTCHANGE : VendingMachineConstants.DISPLAY_DEFAULT);
+		change.put(new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME), 0);
+		change.put(new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL), 0);
+		change.put(new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER), 0);
 	}
 	
 	public boolean insertCoin(Coin c) {
 		if (c.isValidCoin()) {
-			this.currentBalance += c.coinValue();
-			this.setDisplay(String.format("%.2f", this.getCurrentBalance()));
+			currentBalance += c.getValue();
+			setDisplay(String.format("%.2f", getCurrentBalance()));
 			return true;
 		}
 		else {
-			this.returnInvalidCoin(c);
+			returnInvalidCoin(c);
 			return false;
 		}
 	}
 
 	public double returnInvalidCoin(Coin c) {
-		this.coinReturnBalance += c.coinValue();
+		coinReturnBalance += c.getValue();
 		return BigDecimal.valueOf(coinReturnBalance).setScale(3, RoundingMode.HALF_UP).doubleValue();
 	}
 	
-	public Product pushButton(Button button) {
-		for (Product product : this.products) {
-			if (button.Value() == product.getName()) {
-				if (this.currentBalance >= product.getPrice()) {
-					this.setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
-					this.setCoinReturnBalance(this.currentBalance - product.getPrice());
-					this.setCurrentBalance(0.0);
+	public Product pushButton(Button button) throws InterruptedException {
+		for (Product product : products) {
+			if (button.Value() == product.getName() && product.getQuantity() > 0) {
+				if (currentBalance >= product.getPrice()) {
+					product.setQuantity(product.getQuantity() - 1);
+					setCoinReturnBalance(currentBalance - product.getPrice());
+					setCurrentBalance(0.0);
+					setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
 					return product;
-				}
-				else this.setDisplay("PRICE " + product.getPrice());
+				}				
+				else setDisplay("PRICE " + product.getPrice());				
+				resetDisplay();				
+			}
+			else if (button.Value() == product.getName() && product.getQuantity() == 0) {
+				setDisplay(VendingMachineConstants.DISPLAY_SOLDOUT);
+				resetDisplay();
 			}
 		}
 		return null;
 	}
 	
 	public void pushReturnButton() {
-		this.coinReturnBalance = this.currentBalance;
-		this.currentBalance = 0.0;
-		this.display = VendingMachineConstants.DISPLAY_DEFAULT;		
+		coinReturnBalance = currentBalance;
+		currentBalance = 0.0;
+		display = VendingMachineConstants.DISPLAY_DEFAULT;		
 	}
 	
 	// Simulating emptying of coin return for this exercise
 	public void emptyCoinReturn() {
-		this.coinReturnBalance = 0.0;
+		coinReturnBalance = 0.0;
+	}
+	
+	public void addProduct(Product product) {
+		for (Product p : products) {
+			if (p.getName().equals(product.getName())) {
+				p.setQuantity(p.getQuantity() + 1);
+				return;
+			}			
+		}
+		product.setQuantity(1);
+		products.add(product);		
+	}
+	
+	public void resetDisplay() {
+		new java.util.Timer().schedule( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		        		if (currentBalance == 0.0) setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
+		        		else setDisplay(String.format("%.2f", getCurrentBalance()));
+		            }
+		        }, 
+		       3000
+		);
+	}
+	
+	public boolean exactChangeIsNeeded() {
+		Collection<Integer> coins = change.values();
+		for (int num : coins) {
+			if (num > 0) return false;
+		}
+		return true;
 	}
 	
 	public String getDisplay() {

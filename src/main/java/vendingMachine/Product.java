@@ -9,11 +9,13 @@ public class Product {
 	Product() {
 		this.setName("");
 		this.setPrice(0.0);
+		this.setQuantity(1);
 	}
 	
 	Product(String n, double p) {
 		this.setName(n);
 		this.setPrice(p);
+		this.setQuantity(1);
 	}
 
 	public String getName() {

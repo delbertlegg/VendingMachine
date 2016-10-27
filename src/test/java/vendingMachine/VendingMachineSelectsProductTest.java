@@ -27,9 +27,9 @@ public class VendingMachineSelectsProductTest {
 	@Before
 	public void setUp() throws Exception {
 		this.vend = new VendingMachine();
-		vend.products.add(cola);
-		vend.products.add(chips);
-		vend.products.add(candy);
+		vend.addProduct(cola);
+		vend.addProduct(chips);
+		vend.addProduct(candy);
 	}
 	
 //
@@ -45,7 +45,7 @@ public class VendingMachineSelectsProductTest {
 //		display either INSERT COIN or the current amount as appropriate.
 		
 	@Test
-	public void VendColaWhenEnoughMoneyIsInsertedAndButtonIsPushed() {
+	public void VendColaWhenEnoughMoneyIsInsertedAndButtonIsPushed() throws InterruptedException {
 		for (int i = 0; i < 4; ++i) {
 			vend.insertCoin(quarter);
 		}
@@ -53,7 +53,7 @@ public class VendingMachineSelectsProductTest {
 	}
 	
 	@Test
-	public void VendChipsWhenEnoughMoneyIsInsertedAndButtonIsPushed() {
+	public void VendChipsWhenEnoughMoneyIsInsertedAndButtonIsPushed() throws InterruptedException {
 		for (int i = 0; i < 2; ++i) {
 			vend.insertCoin(quarter);
 		}
@@ -61,7 +61,7 @@ public class VendingMachineSelectsProductTest {
 	}
 	
 	@Test
-	public void VendCandyWhenEnoughMoneyIsInsertedAndButtonIsPushed() {
+	public void VendCandyWhenEnoughMoneyIsInsertedAndButtonIsPushed() throws InterruptedException {
 		for (int i = 0; i < 2; ++i) {
 			vend.insertCoin(quarter);
 		}
@@ -71,7 +71,7 @@ public class VendingMachineSelectsProductTest {
 	}
 	
 	@Test
-	public void DisplayReadsInsertCoinAndCurrentAmountResetsWhenProductIsVended() {
+	public void DisplayReadsInsertCoinAndCurrentAmountResetsWhenProductIsVended() throws InterruptedException {
 		for (int i = 0; i < 2; ++i) {
 			vend.insertCoin(quarter);
 		}
@@ -83,7 +83,7 @@ public class VendingMachineSelectsProductTest {
 	}
 	
 	@Test
-	public void DisplayReadsPRICEandPriceOfItemWhenNotEnoughMoneyIsInsertedAndButtonIsPressed() {
+	public void DisplayReadsPRICEandPriceOfItemWhenNotEnoughMoneyIsInsertedAndButtonIsPressed() throws InterruptedException {
 		vend.insertCoin(quarter);
 		vend.insertCoin(dime);
 		vend.insertCoin(nickel);

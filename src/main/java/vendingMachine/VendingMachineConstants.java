@@ -1,6 +1,8 @@
 package vendingMachine;
 
 public class VendingMachineConstants {
+	public static final String DISPLAY_SOLDOUT = "SOLD OUT";
+	public static final String DISPLAY_EXACTCHANGE = "EXACT CHANGE ONLY";
 	public static String DISPLAY_DEFAULT = "INSERT COIN";
 	public enum Button {
 		COLA(ProductConstants.NAME_COLA), 

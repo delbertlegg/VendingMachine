@@ -89,8 +89,9 @@ public class VendingMachineAcceptsCoinsTest {
 	}
 	
 	@Test
-	public void VendingMachineDisplaysINSERTCOINWhenNoCoinsAreInserted() {
-		assertEquals(vend.getDisplay(), VendingMachineConstants.DISPLAY_DEFAULT);
+	public void VendingMachineDisplaysINSERTCOINorEXACTCHANGEONLYWhenNoCoinsAreInserted() {
+		assertEquals(vend.exactChangeIsNeeded() ? VendingMachineConstants.DISPLAY_EXACTCHANGE 
+				: VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
 	}
 	
 	@Test

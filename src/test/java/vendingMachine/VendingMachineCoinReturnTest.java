@@ -25,7 +25,7 @@ public class VendingMachineCoinReturnTest {
 	@Before
 	public void setUp() throws Exception {
 		this.vend = new VendingMachine();
-		vend.products.add(candy);
+		vend.addProduct(candy);
 		
 		for (int i = 0; i < 3; ++i) {
 			vend.insertCoin(quarter);
@@ -51,7 +51,7 @@ public class VendingMachineCoinReturnTest {
 //	When the return coins button is pressed, the money the customer has placed in the machine is returned and the display shows INSERT COIN.
 	
 	@Test
-	public void VendingMachineReturnsChangeWhenProductCostsLessThanCurrentBalance() {
+	public void VendingMachineReturnsChangeWhenProductCostsLessThanCurrentBalance() throws InterruptedException {
 		double val = vend.getCurrentBalance();
 		vend.pushButton(Button.CANDY);
 		assertEquals(val - candy.getPrice(), vend.getCoinReturnBalance(), .01);
