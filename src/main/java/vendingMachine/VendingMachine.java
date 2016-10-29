@@ -151,7 +151,7 @@ public class VendingMachine {
 	public boolean exactChangeIsNeeded(double price) {
 		if (price == 0) {
 			for (int num : changeBins) if (num > 0) return false;
-			else return true;
+			return true;
 		}
 		double neededChange = currentBalance() - price;
 		for (int i = 0; i < NUM_COINS; ++i) {
