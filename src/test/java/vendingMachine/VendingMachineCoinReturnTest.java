@@ -26,6 +26,7 @@ public class VendingMachineCoinReturnTest {
 	public void setUp() throws Exception {
 		this.vend = new VendingMachine();
 		vend.addProduct(candy);
+		vend.addProduct(candy);
 		
 		for (int i = 0; i < 3; ++i) {
 			vend.insertCoin(quarter);
@@ -52,6 +53,7 @@ public class VendingMachineCoinReturnTest {
 	
 	@Test
 	public void VendingMachineReturnsChangeWhenProductCostsLessThanCurrentBalance() throws InterruptedException {
+		vend.fillChangeBins(10);
 		double val = vend.getCurrentBalance();
 		vend.pushButton(Button.CANDY);
 		assertEquals(val - candy.getPrice(), vend.getCoinReturnBalance(), .01);
@@ -62,6 +64,8 @@ public class VendingMachineCoinReturnTest {
 		double val = vend.getCurrentBalance();
 		vend.pushReturnButton();
 		assertEquals(val, vend.getCoinReturnBalance(), .01);
-		assertEquals(VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
+		assertEquals(vend.exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE : VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
+		vend.emptyCoinReturn();
+		assertEquals(0.0, vend.getCoinReturnBalance(), .01);
 	}
 }

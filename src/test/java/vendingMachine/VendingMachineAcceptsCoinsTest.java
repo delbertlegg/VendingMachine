@@ -90,13 +90,28 @@ public class VendingMachineAcceptsCoinsTest {
 	
 	@Test
 	public void VendingMachineDisplaysINSERTCOINorEXACTCHANGEONLYWhenNoCoinsAreInserted() {
-		assertEquals(vend.exactChangeIsNeeded() ? VendingMachineConstants.DISPLAY_EXACTCHANGE 
+		assertEquals(vend.exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE 
 				: VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
 	}
 	
 	@Test
 	public void VendingMachinePlacesRejectedCoinsInCoinReturn() {
-		assertEquals(.01, vend.returnInvalidCoin(cent), .01);
+		assertEquals(cent, vend.returnInvalidCoin(cent));
+	}
+	
+	@Test
+	public void TestIsQuarter() {
+		assertTrue(quarter.isQuarter());
+	}
+	
+	@Test
+	public void TestIsDime() {
+		assertTrue(dime.isDime());
+	}
+	
+	@Test
+	public void TestIsNickel() {
+		assertTrue(nickel.isNickel());
 	}
 
 }

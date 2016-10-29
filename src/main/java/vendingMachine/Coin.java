@@ -1,8 +1,10 @@
 package vendingMachine;
 
+import java.util.Comparator;
+
 import vendingMachine.CoinConstants.*;
 
-public class Coin {
+public class Coin implements Comparator<Coin>, Comparable<Coin>{
 	private double weight;	
 	private CoinEdge edge;
 	private double value;
@@ -34,7 +36,7 @@ public class Coin {
 	
 	// Note: For the purpose of this exercise, I'm using an equality check against a constant double. In a real world application, I may add a
 	// lower and upper bound to this check in case of measurement fluctuations (wear, girt/debris, etc.)
-	public void setValue() {
+	private void setValue() {
 		if (this.weight < CoinConstants.WEIGHT_CENT) value =  CoinConstants.VALUE_DIME;
 		else if (this.weight < CoinConstants.WEIGHT_NICKEL) value =  CoinConstants.VALUE_CENT;
 		else if (this.weight < CoinConstants.WEIGHT_QUARTER) value = CoinConstants.VALUE_NICKEL;
@@ -43,5 +45,28 @@ public class Coin {
 	
 	public double getValue() {
 		return value;
+	}
+	
+	
+	public boolean isQuarter() {
+		return value == CoinConstants.VALUE_QUARTER;
+	}
+	
+	public boolean isDime() {
+		return value == CoinConstants.VALUE_DIME;
+	}
+	
+	public boolean isNickel() {
+		return value == CoinConstants.VALUE_NICKEL;
+	}
+
+	@Override
+	public int compareTo(Coin c) {
+		return (int)((c.value * 100) -(this.value * 100));
+	}
+
+	@Override
+	public int compare(Coin c, Coin c1) {
+		return (int)((c1.value * 100) - (c.value * 100));
 	}
 }

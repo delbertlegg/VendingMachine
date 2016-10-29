@@ -10,15 +10,12 @@ import vendingMachine.VendingMachineConstants.Button;
 
 public class VendingMachineEdgeCases {
 	private VendingMachine vend;
-	private static Coin nickel, dime, quarter, cent;
+	private static Coin quarter;
 	private static Product cola, chips, candy;
 	
 	@BeforeClass
 	public static void runOnceBeforeClass() {
-		nickel = new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL);
-		dime = new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME);
 		quarter = new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER);
-		cent = new Coin(CoinConstants.WEIGHT_CENT, CoinConstants.EDGE_CENT);
 		
 		cola = new Product(ProductConstants.NAME_COLA, ProductConstants.COST_COLA);
 		chips = new Product(ProductConstants.NAME_CHIPS, ProductConstants.COST_CHIPS);
@@ -33,9 +30,6 @@ public class VendingMachineEdgeCases {
 		vend.addProduct(candy);
 	}
 	
-//
-
-//
 //	Sold Out
 //
 //	As a customer
@@ -77,13 +71,25 @@ public class VendingMachineEdgeCases {
 	}
 	
 	@Test
-	public void VendingMachineDisplaysEXACTCHANGEONLYWhenNotAbleToMakeChange() {
-		assertEquals(VendingMachineConstants.DISPLAY_EXACTCHANGE, vend.getDisplay());
-		
+	public void VendingMachineDisplaysEXACTCHANGEONLYWhenBinsAreEmpty() {
+		assertEquals(VendingMachineConstants.DISPLAY_EXACTCHANGE, vend.getDisplay());		
 	}
 	
-	// TODO: Need to add test case when change is available (and come up with scheme to add coins to
-	// bins and determine if machine can make change then
+	@Test
+	public void VendingMachineDisplaysEXACTCHANGEONLYWhenNotEnoughChangeForItem() throws InterruptedException {
+		vend.fillChangeBins(1);
+		for (int i = 0; i < 4; ++i) vend.insertCoin(quarter);
+		vend.pushButton(Button.CHIPS);
+		assertEquals(VendingMachineConstants.DISPLAY_EXACTCHANGE, vend.getDisplay());
+	}
+	
+	@Test
+	public void VendingMachineGivesCorrectChange() throws InterruptedException {
+		vend.fillChangeBins(1);
+		for (int i = 0; i < 3; ++i) vend.insertCoin(quarter);
+		vend.pushButton(Button.CHIPS);
+		assertEquals(CoinConstants.VALUE_QUARTER, vend.getCoinReturnBalance(), .01);
+	}
 }
 
 

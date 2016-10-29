@@ -88,7 +88,8 @@ public class VendingMachineSelectsProductTest {
 		vend.insertCoin(dime);
 		vend.insertCoin(nickel);
 		vend.pushButton(Button.CANDY);
-		
-		assertEquals("PRICE "+ candy.getPrice(), vend.getDisplay());		
+		assertEquals("PRICE "+ candy.getPrice(), vend.getDisplay());
+		Thread.sleep(4000);
+		assertEquals("0.40", vend.getDisplay());
 	}
 }
