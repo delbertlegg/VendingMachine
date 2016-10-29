@@ -16,18 +16,18 @@ public class VendingMachine {
 	private static final int NUM_COINS = 3;
 	private String display;
 	public List<Product> products = new ArrayList<Product>();
-	private int[] change = new int[NUM_COINS];
+	private int[] changeBins = new int[NUM_COINS];
 	private List<Coin> currentCoins = new ArrayList<Coin>();
 	private List<Coin> returnCoins = new ArrayList<Coin>();
 
 	
 	// Default constructor
 	VendingMachine() {
-		setDisplay(exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE : VendingMachineConstants.DISPLAY_DEFAULT);
+		setDefaultDisplay();
 	}
 	public void fillChangeBins(int num) {
 		for (int i = 0; i < NUM_COINS; ++i) {
-			change[i] = num;
+			changeBins[i] = num;
 		}
 	}
 	
@@ -64,10 +64,7 @@ public class VendingMachine {
 					resetDisplay();
 				}
 				else if (currentBalance() >= product.getPrice()) {
-					product.setQuantity(product.getQuantity() - 1);
-					depositCurrentBalance(product.getPrice());
-					setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
-					return product;
+					return vendProduct(product);
 				}				
 				else setDisplay("PRICE " + product.getPrice());				
 				resetDisplay();				
@@ -78,6 +75,13 @@ public class VendingMachine {
 			}
 		}
 		return null;
+	}
+	
+	private Product vendProduct(Product product) {
+		product.setQuantity(product.getQuantity() - 1);
+		depositCurrentBalance(product.getPrice());
+		setDefaultDisplay();
+		return product;
 	}
 	
 	private void depositCurrentBalance(double price) {
@@ -95,9 +99,9 @@ public class VendingMachine {
 	}
 
 	private void moveCoinToChangeBin(Coin coin) {
-		if(coin.isQuarter()) change[INV_QUARTERS]++;
-		else if(coin.isNickel()) change[INV_NICKELS]++;
-		else change[INV_DIMES]++;
+		if(coin.isQuarter()) changeBins[INV_QUARTERS]++;
+		else if(coin.isNickel()) changeBins[INV_NICKELS]++;
+		else changeBins[INV_DIMES]++;
 		currentCoins.remove(coin);
 	}
 
@@ -108,7 +112,7 @@ public class VendingMachine {
 
 	public void pushReturnButton() {
 		makeChange();
-		display = exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE :VendingMachineConstants.DISPLAY_DEFAULT;		
+		setDefaultDisplay();
 	}
 	
 	// Simulating emptying of coin return for this exercise
@@ -127,12 +131,16 @@ public class VendingMachine {
 		products.add(product);		
 	}
 	
+	public void setDefaultDisplay() {
+		display = exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE :VendingMachineConstants.DISPLAY_DEFAULT;
+	}
+	
 	public void resetDisplay() {
 		new java.util.Timer().schedule( 
 		        new java.util.TimerTask() {
 		            @Override
 		            public void run() {
-		        		if (currentBalance() == 0.0) setDisplay(VendingMachineConstants.DISPLAY_DEFAULT);
+		        		if (currentBalance() == 0.0) setDefaultDisplay();
 		        		else setDisplay(String.format("%.2f", getCurrentBalance()));
 		            }
 		        }, 
@@ -142,12 +150,12 @@ public class VendingMachine {
 	
 	public boolean exactChangeIsNeeded(double price) {
 		if (price == 0) {
-			for (int num : change) if (num > 0) return false;
+			for (int num : changeBins) if (num > 0) return false;
 			else return true;
 		}
 		double neededChange = currentBalance() - price;
 		for (int i = 0; i < NUM_COINS; ++i) {
-			for (int j = 0; j < change[i]; ++j) {
+			for (int j = 0; j < changeBins[i]; ++j) {
 				if (i == INV_QUARTERS && neededChange >= CoinConstants.VALUE_QUARTER) 
 					neededChange =  formattedDouble(neededChange - CoinConstants.VALUE_QUARTER);
 				else if (i == INV_DIMES && neededChange >= CoinConstants.VALUE_DIME)

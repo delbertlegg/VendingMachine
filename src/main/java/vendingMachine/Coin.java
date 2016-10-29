@@ -23,6 +23,16 @@ public class Coin implements Comparator<Coin>, Comparable<Coin>{
 		setValue();
 	}
 	
+
+	private void setValue() {
+		if (this.weight < CoinConstants.WEIGHT_CENT) value =  CoinConstants.VALUE_DIME;
+		else if (this.weight < CoinConstants.WEIGHT_NICKEL) value =  CoinConstants.VALUE_CENT;
+		else if (this.weight < CoinConstants.WEIGHT_QUARTER) value = CoinConstants.VALUE_NICKEL;
+		else value =  CoinConstants.VALUE_QUARTER;
+	}
+	
+	// Note: For the purpose of this exercise, I'm using an equality check against a constant double. In a real world application, I may add a
+	// lower and upper bound to this check in case of measurement fluctuations (wear, dirt/debris, etc.)
 	public boolean isValidCoin() {
 		if (this.edge == CoinEdge.SMOOTH) {
 			if (this.weight <= CoinConstants.WEIGHT_CENT) return false;
@@ -32,15 +42,6 @@ public class Coin implements Comparator<Coin>, Comparable<Coin>{
 			if (this.weight > CoinConstants.WEIGHT_QUARTER) return false;
 			else return true;			
 		}
-	}
-	
-	// Note: For the purpose of this exercise, I'm using an equality check against a constant double. In a real world application, I may add a
-	// lower and upper bound to this check in case of measurement fluctuations (wear, girt/debris, etc.)
-	private void setValue() {
-		if (this.weight < CoinConstants.WEIGHT_CENT) value =  CoinConstants.VALUE_DIME;
-		else if (this.weight < CoinConstants.WEIGHT_NICKEL) value =  CoinConstants.VALUE_CENT;
-		else if (this.weight < CoinConstants.WEIGHT_QUARTER) value = CoinConstants.VALUE_NICKEL;
-		else value =  CoinConstants.VALUE_QUARTER;
 	}
 	
 	public double getValue() {
