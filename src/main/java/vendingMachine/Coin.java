@@ -63,7 +63,7 @@ public class Coin implements Comparator<Coin>, Comparable<Coin>{
 
 	@Override
 	public int compareTo(Coin c) {
-		return (int)((c.value * 100) -(this.value * 100));
+		return (int)((c.value * 100) - (this.value * 100));
 	}
 
 	@Override
