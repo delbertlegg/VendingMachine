@@ -10,11 +10,13 @@ import vendingMachine.VendingMachineConstants.Button;
 
 public class VendingMachineEdgeCases {
 	private VendingMachine vend;
-	private static Coin quarter;
+	private static Coin nickel, dime, quarter;
 	private static Product cola, chips, candy;
 	
 	@BeforeClass
 	public static void runOnceBeforeClass() {
+		nickel = new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL);
+		dime = new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME);
 		quarter = new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER);
 		
 		cola = new Product(ProductConstants.NAME_COLA, ProductConstants.COST_COLA);
@@ -86,9 +88,13 @@ public class VendingMachineEdgeCases {
 	@Test
 	public void VendingMachineGivesCorrectChange() throws InterruptedException {
 		vend.fillChangeBins(1);
-		for (int i = 0; i < 3; ++i) vend.insertCoin(quarter);
-		vend.pushButton(Button.CHIPS);
-		assertEquals(CoinConstants.VALUE_QUARTER, vend.getCoinReturnBalance(), .01);
+		for (int i = 0; i < 2; ++i) {
+			vend.insertCoin(quarter);
+			vend.insertCoin(dime);
+		}
+		vend.insertCoin(nickel);
+		vend.pushButton(Button.CANDY);
+		assertEquals(CoinConstants.VALUE_DIME, vend.getCoinReturnBalance(), .01);
 	}
 }
 

@@ -3,7 +3,7 @@ package vendingMachine;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import vendingMachine.VendingMachineConstants.*;
@@ -85,33 +85,57 @@ public class VendingMachine {
 	}
 	
 	private void depositCurrentBalance(double price) {
-		Collections.sort(currentCoins);
-		while (price > 0) {
-			for (Coin coin : currentCoins) {
+		Iterator<Coin> it = currentCoins.listIterator();
+		while(it.hasNext()) {
+			Coin coin = it.next();
 				if (coin.getValue() <= price) {
 					price = formattedDouble(price - coin.getValue());
-					moveCoinToChangeBin(coin);		
-					break;
+					moveCoinToChangeBin(coin);
+					it.remove();
 				}
-			}			
-		}
-		if (!currentCoins.isEmpty()) makeChange();
+			}
+			
+		if (!currentCoins.isEmpty()) makeChange(getCurrentBalance());
+		
+		it = currentCoins.listIterator();
+		while (it.hasNext()) {
+				Coin coin = it.next();
+				moveCoinToChangeBin(coin);
+				it.remove();
+				break;
+			}		
 	}
 
 	private void moveCoinToChangeBin(Coin coin) {
 		if(coin.isQuarter()) changeBins[INV_QUARTERS]++;
 		else if(coin.isNickel()) changeBins[INV_NICKELS]++;
 		else changeBins[INV_DIMES]++;
-		currentCoins.remove(coin);
 	}
 
-	private void makeChange() {
-		returnCoins.addAll(currentCoins);
-		currentCoins.clear();
+	private void makeChange(double price) {
+		while (price > 0) {
+			for (int i = 0; i < NUM_COINS; ++i) {
+				for (int j = 0; j < changeBins[i]; ++j) {
+					if (i == INV_QUARTERS && price >= CoinConstants.VALUE_QUARTER) {
+						price =  formattedDouble(price - CoinConstants.VALUE_QUARTER);
+						returnCoins.add(new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER));
+					}
+					else if (i == INV_DIMES && price >= CoinConstants.VALUE_DIME) {
+						price = formattedDouble(price - CoinConstants.VALUE_DIME);
+						returnCoins.add(new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME));
+					}
+					else if (i == INV_NICKELS && price >= CoinConstants.VALUE_NICKEL) {
+						price = formattedDouble(price - CoinConstants.VALUE_NICKEL);
+						returnCoins.add(new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL));
+						}
+				}			
+			}
+		}
 	}
 
 	public void pushReturnButton() {
-		makeChange();
+		returnCoins.addAll(currentCoins);
+		currentCoins.clear();
 		setDefaultDisplay();
 	}
 	
