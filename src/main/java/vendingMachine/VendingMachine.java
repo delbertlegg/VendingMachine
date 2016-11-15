@@ -19,7 +19,6 @@ public class VendingMachine {
 	private int[] changeBins = new int[NUM_COINS];
 	private List<Coin> currentCoins = new ArrayList<Coin>();
 	private List<Coin> returnCoins = new ArrayList<Coin>();
-
 	
 	// Default constructor
 	VendingMachine() {
@@ -59,15 +58,9 @@ public class VendingMachine {
 	public Product pushButton(Button button) throws InterruptedException {
 		for (Product product : products) {
 			if (button.Value() == product.getName() && product.getQuantity() > 0) {
-				if (exactChangeIsNeeded(product.getPrice())) {
-					setDisplay(VendingMachineConstants.DISPLAY_EXACTCHANGE);
-					resetDisplay();
+				if (!exactChangeIsNeededFor(product)) {
+					return vendProductIfEnoughChangeIsInserted(product);
 				}
-				else if (currentBalance() >= product.getPrice()) {
-					return vendProduct(product);
-				}				
-				else setDisplay("PRICE " + product.getPrice());				
-				resetDisplay();				
 			}
 			else if (button.Value() == product.getName() && product.getQuantity() == 0) {
 				setDisplay(VendingMachineConstants.DISPLAY_SOLDOUT);
@@ -77,6 +70,23 @@ public class VendingMachine {
 		return null;
 	}
 	
+	private Product vendProductIfEnoughChangeIsInserted(Product product) {
+		if (currentBalance() >= product.getPrice()) {
+			return vendProduct(product);
+		}				
+		else setDisplay("PRICE " + product.getPrice());				
+		resetDisplay();				
+		return null;
+	}
+	
+	private boolean exactChangeIsNeededFor(Product product) {
+		if (exactChangeIsNeeded(product.getPrice())) {
+			setDisplay(VendingMachineConstants.DISPLAY_EXACTCHANGE);
+			resetDisplay();
+			return true;
+		}		
+		return false;
+	}
 	private Product vendProduct(Product product) {
 		product.setQuantity(product.getQuantity() - 1);
 		depositCurrentBalance(product.getPrice());
@@ -86,26 +96,34 @@ public class VendingMachine {
 	
 	private void depositCurrentBalance(double price) {
 		Iterator<Coin> it = currentCoins.listIterator();
-		while(it.hasNext()) {
-			Coin coin = it.next();
-				if (coin.getValue() <= price) {
-					price = formattedDouble(price - coin.getValue());
-					moveCoinToChangeBin(coin);
-					it.remove();
-				}
-			}
+		subtractCostFromCurrentCoins(it, price);		
 			
 		if (!currentCoins.isEmpty()) makeChange(getCurrentBalance());
 		
 		it = currentCoins.listIterator();
-		while (it.hasNext()) {
-				Coin coin = it.next();
-				moveCoinToChangeBin(coin);
-				it.remove();
-				break;
-			}		
+		depositRemainingCoinsIntoChangeBins(it);
+		
 	}
 
+	private void depositRemainingCoinsIntoChangeBins(Iterator<Coin> it) {
+		while (it.hasNext()) {
+			Coin coin = it.next();
+			moveCoinToChangeBin(coin);
+			it.remove();
+			break;
+		}				
+	}
+	
+	private void subtractCostFromCurrentCoins(Iterator<Coin> it, double price) {
+		while(it.hasNext()) {
+			Coin coin = it.next();
+			if (coin.getValue() <= price) {
+				price = formattedDouble(price - coin.getValue());
+				moveCoinToChangeBin(coin);
+				it.remove();
+			}
+		}		
+	}
 	private void moveCoinToChangeBin(Coin coin) {
 		if(coin.isQuarter()) changeBins[INV_QUARTERS]++;
 		else if(coin.isNickel()) changeBins[INV_NICKELS]++;
@@ -113,24 +131,29 @@ public class VendingMachine {
 	}
 
 	private void makeChange(double price) {
+		Coin coin = new Coin();
 		while (price > 0) {
 			for (int i = 0; i < NUM_COINS; ++i) {
 				for (int j = 0; j < changeBins[i]; ++j) {
-					if (i == INV_QUARTERS && price >= CoinConstants.VALUE_QUARTER) {
-						price =  formattedDouble(price - CoinConstants.VALUE_QUARTER);
-						returnCoins.add(new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER));
-					}
-					else if (i == INV_DIMES && price >= CoinConstants.VALUE_DIME) {
-						price = formattedDouble(price - CoinConstants.VALUE_DIME);
-						returnCoins.add(new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME));
-					}
-					else if (i == INV_NICKELS && price >= CoinConstants.VALUE_NICKEL) {
-						price = formattedDouble(price - CoinConstants.VALUE_NICKEL);
-						returnCoins.add(new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL));
-						}
+					coin = returnCoinsForChange(i, price);
+					price =  coin != null ? formattedDouble(price - coin.getValue()): price;
+					returnCoins.add(coin);
 				}			
 			}
 		}
+	}
+	
+	private Coin returnCoinsForChange(int i, double price) {
+		if (i == INV_QUARTERS && price >= CoinConstants.VALUE_QUARTER) {
+			return new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER);
+		}
+		else if (i == INV_DIMES && price >= CoinConstants.VALUE_DIME) {
+			return new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME);
+		}
+		else if (i == INV_NICKELS && price >= CoinConstants.VALUE_NICKEL) {
+			return new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL);
+		}
+		return null;
 	}
 
 	public void pushReturnButton() {
@@ -177,17 +200,17 @@ public class VendingMachine {
 			for (int num : changeBins) if (num > 0) return false;
 			return true;
 		}
-		double neededChange = currentBalance() - price;
+		Coin coin = new Coin();
+		double neededChange = formattedDouble(currentBalance() - price);
 		for (int i = 0; i < NUM_COINS; ++i) {
 			for (int j = 0; j < changeBins[i]; ++j) {
-				if (i == INV_QUARTERS && neededChange >= CoinConstants.VALUE_QUARTER) 
-					neededChange =  formattedDouble(neededChange - CoinConstants.VALUE_QUARTER);
-				else if (i == INV_DIMES && neededChange >= CoinConstants.VALUE_DIME)
-					neededChange = formattedDouble(neededChange - CoinConstants.VALUE_DIME);
-				else neededChange = formattedDouble(neededChange - CoinConstants.VALUE_NICKEL);
-			}			
+				coin = returnCoinsForChange(i, neededChange);
+				neededChange =  coin != null ? formattedDouble(neededChange - coin.getValue()) : neededChange;
+			}
 		}
-		if (neededChange > 0) return true;
+		if (neededChange > 0) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -210,7 +233,7 @@ public class VendingMachine {
 	public double getCoinReturnBalance() {
 		double total = 0.0;
 		for (Coin coin : returnCoins) {
-			total += coin.getValue();
+			total = coin != null ? total + coin.getValue() : total;
 		}
 		return total;
 	}
