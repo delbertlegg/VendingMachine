@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import vendingMachine.CoinConstants.*;
 
-public class Coin implements Comparator<Coin>, Comparable<Coin>{
+public class Coin extends Money implements Comparator<Coin>, Comparable<Coin> {
 	private double weight;	
 	private CoinEdge edge;
 	private double value;
@@ -33,7 +33,7 @@ public class Coin implements Comparator<Coin>, Comparable<Coin>{
 	
 	// Note: For the purpose of this exercise, I'm using an equality check against a constant double. In a real world application, I may add a
 	// lower and upper bound to this check in case of measurement fluctuations (wear, dirt/debris, etc.)
-	public boolean isValidCoin() {
+	public boolean isValid() {
 		if (this.edge == CoinEdge.SMOOTH) {
 			if (this.weight <= CoinConstants.WEIGHT_CENT) return false;
 			else return true;

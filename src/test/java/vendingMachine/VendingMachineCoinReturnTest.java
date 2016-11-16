@@ -64,7 +64,10 @@ public class VendingMachineCoinReturnTest {
 		double val = vend.getCurrentBalance();
 		vend.pushReturnButton();
 		assertEquals(val, vend.getCoinReturnBalance(), .01);
-		assertEquals(vend.exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE : VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
+		assertEquals(VendingMachineConstants.DISPLAY_EXACTCHANGE, vend.getDisplay());
+		vend.fillChangeBins(20);
+		assertEquals(VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
+
 		vend.emptyCoinReturn();
 		assertEquals(0.0, vend.getCoinReturnBalance(), .01);
 	}

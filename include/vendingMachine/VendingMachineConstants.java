@@ -1,5 +1,8 @@
 package vendingMachine;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class VendingMachineConstants {
 	public static final String DISPLAY_SOLDOUT = "SOLD OUT";
 	public static final String DISPLAY_EXACTCHANGE = "EXACT CHANGE ONLY";
@@ -17,6 +20,10 @@ public class VendingMachineConstants {
 		public String Value() {
 			return this.value;
 		}
+	}
+	
+	public static double formattedDouble(double d) {
+		return BigDecimal.valueOf(d).setScale(3, RoundingMode.HALF_UP).doubleValue();
 	}
 
 }
