@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import vendingMachine.CoinConstants.*;
 
-public class Coin extends Money implements Comparator<Coin>, Comparable<Coin> {
+public class Coin extends Money {
 	private double weight;	
 	private CoinEdge edge;
 	private double value;
@@ -59,15 +59,5 @@ public class Coin extends Money implements Comparator<Coin>, Comparable<Coin> {
 	
 	public boolean isNickel() {
 		return value == CoinConstants.VALUE_NICKEL;
-	}
-
-	@Override
-	public int compareTo(Coin c) {
-		return (int)((c.value * 100) - (this.value * 100));
-	}
-
-	@Override
-	public int compare(Coin c, Coin c1) {
-		return (int)((c1.value * 100) - (c.value * 100));
 	}
 }
