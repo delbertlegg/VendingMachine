@@ -3,6 +3,7 @@ package vendingMachine;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import static vendingMachine.VendingMachineConstants.*;
 
 public abstract class PaymentSystem {
 	protected List<Money> currentBalance = new ArrayList<Money>();
@@ -43,7 +44,7 @@ public abstract class PaymentSystem {
 		while(it.hasNext()) {
 			Money m = it.next();
 			if (m.getValue() <= price) {
-				price = VendingMachineConstants.formattedDouble(price - m.getValue());
+				price = formattedDouble(price - m.getValue());
 				moveCurrencyToChangeBin(m);
 				it.remove();
 			}
@@ -55,7 +56,7 @@ public abstract class PaymentSystem {
 	}
 	
 	public double getCurrentBalance() {
-		return VendingMachineConstants.formattedDouble(currentBalance());
+		return formattedDouble(currentBalance());
 	}
 	
 	public double getCoinReturnbalance() {

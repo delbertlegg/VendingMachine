@@ -1,8 +1,6 @@
 package vendingMachine;
 
-import java.util.Comparator;
-
-import vendingMachine.CoinConstants.*;
+import static vendingMachine.CoinConstants.*;
 
 public class Coin extends Money {
 	private double weight;	
@@ -25,21 +23,21 @@ public class Coin extends Money {
 	
 
 	private void setValue() {
-		if (this.weight < CoinConstants.WEIGHT_CENT) value =  CoinConstants.VALUE_DIME;
-		else if (this.weight < CoinConstants.WEIGHT_NICKEL) value =  CoinConstants.VALUE_CENT;
-		else if (this.weight < CoinConstants.WEIGHT_QUARTER) value = CoinConstants.VALUE_NICKEL;
-		else value =  CoinConstants.VALUE_QUARTER;
+		if (this.weight < WEIGHT_CENT) value =  VALUE_DIME;
+		else if (this.weight < WEIGHT_NICKEL) value =  VALUE_CENT;
+		else if (this.weight < WEIGHT_QUARTER) value = VALUE_NICKEL;
+		else value =  VALUE_QUARTER;
 	}
 	
 	// Note: For the purpose of this exercise, I'm using an equality check against a constant double. In a real world application, I may add a
 	// lower and upper bound to this check in case of measurement fluctuations (wear, dirt/debris, etc.)
 	public boolean isValid() {
 		if (this.edge == CoinEdge.SMOOTH) {
-			if (this.weight <= CoinConstants.WEIGHT_CENT) return false;
+			if (this.weight <= WEIGHT_CENT) return false;
 			else return true;
 		}
 		else {
-			if (this.weight > CoinConstants.WEIGHT_QUARTER) return false;
+			if (this.weight > WEIGHT_QUARTER) return false;
 			else return true;			
 		}
 	}
@@ -50,14 +48,14 @@ public class Coin extends Money {
 	
 	
 	public boolean isQuarter() {
-		return value == CoinConstants.VALUE_QUARTER;
+		return value == VALUE_QUARTER;
 	}
 	
 	public boolean isDime() {
-		return value == CoinConstants.VALUE_DIME;
+		return value == VALUE_DIME;
 	}
 	
 	public boolean isNickel() {
-		return value == CoinConstants.VALUE_NICKEL;
+		return value == VALUE_NICKEL;
 	}
 }

@@ -1,5 +1,8 @@
 package vendingMachine;
 
+import static vendingMachine.VendingMachineConstants.*;
+import static vendingMachine.CoinConstants.*;
+
 public class CoinPaymentSystem extends PaymentSystem {
 	private static final int INV_QUARTERS = 0;
 	private static final int INV_DIMES = 1;
@@ -38,11 +41,11 @@ public class CoinPaymentSystem extends PaymentSystem {
 			return true;
 		}
 		Coin coin = new Coin();
-		double neededChange = VendingMachineConstants.formattedDouble(currentBalance() - price);
+		double neededChange = formattedDouble(currentBalance() - price);
 		for (int i = 0; i < NUM_COINS; ++i) {
 			for (int j = 0; j < changeBins[i]; ++j) {
 				coin = (Coin) returnMoneyForChange(i, neededChange);
-				neededChange =  coin != null ? VendingMachineConstants.formattedDouble(neededChange - coin.getValue()) : neededChange;
+				neededChange =  coin != null ? formattedDouble(neededChange - coin.getValue()) : neededChange;
 			}
 		}
 		if (neededChange > 0) {
@@ -65,7 +68,7 @@ public class CoinPaymentSystem extends PaymentSystem {
 			for (int i = 0; i < NUM_COINS; ++i) {
 				for (int j = 0; j < changeBins[i]; ++j) {
 					coin = (Coin) returnMoneyForChange(i, price);
-					price =  coin != null ? VendingMachineConstants.formattedDouble(price - coin.getValue()): price;
+					price =  coin != null ? formattedDouble(price - coin.getValue()): price;
 					returnBalance.add(coin);
 				}			
 			}
@@ -74,14 +77,14 @@ public class CoinPaymentSystem extends PaymentSystem {
 
 	@Override
 	public Money returnMoneyForChange(int i, double price) {
-		if (i == INV_QUARTERS && price >= CoinConstants.VALUE_QUARTER) {
-			return new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER);
+		if (i == INV_QUARTERS && price >= VALUE_QUARTER) {
+			return new Coin(WEIGHT_QUARTER, EDGE_QUARTER);
 		}
-		else if (i == INV_DIMES && price >= CoinConstants.VALUE_DIME) {
-			return new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME);
+		else if (i == INV_DIMES && price >= VALUE_DIME) {
+			return new Coin(WEIGHT_DIME, EDGE_DIME);
 		}
-		else if (i == INV_NICKELS && price >= CoinConstants.VALUE_NICKEL) {
-			return new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL);
+		else if (i == INV_NICKELS && price >= VALUE_NICKEL) {
+			return new Coin(WEIGHT_NICKEL, EDGE_NICKEL);
 		}
 		return null;
 	}

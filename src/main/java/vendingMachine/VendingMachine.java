@@ -3,8 +3,7 @@ package vendingMachine;
 import java.util.ArrayList;
 import java.util.List;
 
-import vendingMachine.VendingMachineConstants.*;
-
+import static vendingMachine.VendingMachineConstants.*;
 
 public class VendingMachine {	
 
@@ -39,7 +38,7 @@ public class VendingMachine {
 				}
 			}
 			else if (button.Value() == product.getName() && product.getQuantity() == 0) {
-				setDisplay(VendingMachineConstants.DISPLAY_SOLDOUT);
+				setDisplay(DISPLAY_SOLDOUT);
 				resetDisplay();
 			}
 		}
@@ -57,7 +56,7 @@ public class VendingMachine {
 	
 	private boolean exactChangeIsNeededFor(Product product) {
 		if (paymentSystem.exactChangeIsNeeded(product.getPrice())) {
-			setDisplay(VendingMachineConstants.DISPLAY_EXACTCHANGE);
+			setDisplay(DISPLAY_EXACTCHANGE);
 			resetDisplay();
 			return true;
 		}		
@@ -87,7 +86,7 @@ public class VendingMachine {
 	}
 	
 	public void setDefaultDisplay() {
-		display = paymentSystem.exactChangeIsNeeded(0) ? VendingMachineConstants.DISPLAY_EXACTCHANGE :VendingMachineConstants.DISPLAY_DEFAULT;
+		display = paymentSystem.exactChangeIsNeeded(0) ? DISPLAY_EXACTCHANGE :DISPLAY_DEFAULT;
 	}
 	
 	public void resetDisplay() {
