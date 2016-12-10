@@ -1,6 +1,8 @@
 package vendingMachine;
 
 import static org.junit.Assert.*;
+import static vendingMachine.CoinConstants.*;
+import static vendingMachine.VendingMachineConstants.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,10 +15,10 @@ public class VendingMachineAcceptsCoinsTest {
 	
 	@BeforeClass
 	public static void runOnceBeforeClass() {
-		nickel = new Coin(CoinConstants.WEIGHT_NICKEL, CoinConstants.EDGE_NICKEL);
-		dime = new Coin(CoinConstants.WEIGHT_DIME, CoinConstants.EDGE_DIME);
-		quarter = new Coin(CoinConstants.WEIGHT_QUARTER, CoinConstants.EDGE_QUARTER);
-		cent = new Coin(CoinConstants.WEIGHT_CENT, CoinConstants.EDGE_CENT);	
+		nickel = new Coin(WEIGHT_NICKEL, EDGE_NICKEL);
+		dime = new Coin(WEIGHT_DIME, EDGE_DIME);
+		quarter = new Coin(WEIGHT_QUARTER, EDGE_QUARTER);
+		cent = new Coin(WEIGHT_CENT, EDGE_CENT);	
 	}
 
 	@Before
@@ -90,9 +92,9 @@ public class VendingMachineAcceptsCoinsTest {
 	
 	@Test
 	public void VendingMachineDisplaysINSERTCOINorEXACTCHANGEONLYWhenNoCoinsAreInserted() {
-		assertEquals(VendingMachineConstants.DISPLAY_EXACTCHANGE, vend.getDisplay());
+		assertEquals(DISPLAY_EXACTCHANGE, vend.getDisplay());
 		vend.fillChangeBins(20);
-		assertEquals(VendingMachineConstants.DISPLAY_DEFAULT, vend.getDisplay());
+		assertEquals(DISPLAY_DEFAULT, vend.getDisplay());
 	}
 
 	
